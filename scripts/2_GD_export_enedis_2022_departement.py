@@ -9,7 +9,6 @@ import pandas as pd
 import numpy as np
 import os
 import requests
-import plotly.express as px
 import sys
 from io import BytesIO
 # chemin du dossier de travail
@@ -19,7 +18,7 @@ DATA_CSV = 'enedis_2022.csv'
 # import du csv
 df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV))
 # variable pour choisir son departement
-DEPARTEMENT = sys.argv[0]
+DEPARTEMENT = sys.argv[1]
 df = df[df['code_departement'] == DEPARTEMENT]
 
 
@@ -83,7 +82,7 @@ def filter_df_by_code_departement(code_departement):
 
 # Filter la database d'enedis base sur le code_departement
 #%%time
-#filter_df_by_code_departement(DEPARTEMENT)
+filter_df_by_code_departement(DEPARTEMENT)
 
 
 # In[53]:
