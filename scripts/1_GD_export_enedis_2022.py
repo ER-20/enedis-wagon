@@ -55,8 +55,8 @@ d = {
     'adresse': 'str',
     #'tri_des_adresses': 'int64', # inutile?
     #'code_epci': 'int64', # inutile?
-    'code_departement': 'int64', # redondance, mais a garder temporairement pour l'appel de l'api
-    'code_region': 'int64'  # inutile?  mais a garder temporairement pour l'appel de l'api
+    'code_departement': 'str', # redondance, mais a garder temporairement pour l'appel de l'api
+    'code_region': 'str'  # inutile?  mais a garder temporairement pour l'appel de l'api
  }
 code_departement = 13
 df = pd.read_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'), usecols=d.keys(), dtype=d)

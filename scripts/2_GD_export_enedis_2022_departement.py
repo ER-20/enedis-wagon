@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[48]:
-
-
 # import libraries
 import pandas as pd
 import numpy as np
@@ -18,12 +15,10 @@ DATA_CSV = 'enedis_2022.csv'
 # import du csv
 df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV))
 # variable pour choisir son departement
-DEPARTEMENT = sys.argv[1]
+DEPARTEMENT = 13
 df = df[df['code_departement'] == DEPARTEMENT]
 
-
-# In[49]:
-
+print(sys.argv[1])
 
 # fonction pour filtrer le dataset en fonction du code departement
 def filter_df_by_code_departement(code_departement):
@@ -47,7 +42,7 @@ def filter_df_by_code_departement(code_departement):
             r = requests.post(url, files=files, data=data)
             pd.read_csv(BytesIO(r.content)).to_csv(output_filepath, index=False)
     get_ban_id_from_csv(input_filepath)
-
+    #print(r.content)
     # importation du fichier temp.csv pour filter sur la fiabilitée de la correspondance
     df_clean_ban_formated = pd.read_csv('temp.csv')
     threshold = 0.75
@@ -77,7 +72,7 @@ def filter_df_by_code_departement(code_departement):
     return f'Fichier csv "enedis_2022_{code_departement}.csv" créé'
 
 
-# In[51]:
+# In[60]:
 
 
 # Filter la database d'enedis base sur le code_departement
@@ -85,9 +80,33 @@ def filter_df_by_code_departement(code_departement):
 filter_df_by_code_departement(DEPARTEMENT)
 
 
-# In[53]:
+# In[61]:
 
 
 #enedis = pd.read_csv(os.path.join(DATA_PROCESSED, f'enedis_2022_{DEPARTEMENT}.csv'))
 #enedis
+
+
+# In[ ]:
+
+
+"""import argparse
+
+# Créer un objet ArgumentParser
+parser = argparse.ArgumentParser(description='Script pour filtrer le dataset enedis par code_departement.')
+
+# Ajouter un argument pour le code_departement
+parser.add_argument('DEPARTEMENT', type=int, help='Le code du département à filtrer.')
+
+# Parser les arguments
+args = parser.parse_args()
+
+# Utiliser l'argument dans votre fonction
+filter_df_by_code_departement(args.DEPARTEMENT)"""
+
+
+# In[ ]:
+
+
+
 
