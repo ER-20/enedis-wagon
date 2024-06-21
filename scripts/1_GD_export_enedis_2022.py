@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[27]:
+# In[65]:
 
 
 # import libraries
@@ -20,20 +20,20 @@ DATA_CSV = 'consommation-annuelle-residentielle-par-adresse.csv'
 df = pd.read_csv(os.path.join(DATA_PATH, DATA_CSV), sep=';')
 
 
-# In[28]:
+# In[66]:
 
 
 # ICI CHOISIR L ANNEE
 df = df[df['annee'] == 2022]
 # to_csv du pres clean
-df.to_csv(os.path.join(DATA_PATH, 'enedis_2022.csv'), index=False)
+df.to_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'), index=False)
 
 
-# In[29]:
+# In[67]:
 
 
 # import du csv pour l'exploration
-#df = pd.read_csv(os.path.join(DATA_PATH, 'enedis_2022.csv'))
+df = pd.read_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'))
 # Pour générer un dictionnaire de base à modifier
 #{k : 'float32' for k in df.columns}
 # convertir le type des columns
@@ -59,34 +59,34 @@ d = {
     'code_region': 'int64'  # inutile?  mais a garder temporairement pour l'appel de l'api
  }
 code_departement = 13
-df = pd.read_csv(os.path.join(DATA_PATH, 'enedis_2022.csv'), usecols=d.keys(), dtype=d)
+df = pd.read_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'), usecols=d.keys(), dtype=d)
 # to_csv du pres clean
 df.to_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'), index=False)
 
 
-# In[30]:
+# In[68]:
 
 
 # verification des null
 df.isna().sum()
 
 
-# In[31]:
+# In[69]:
 
 
 # to_csv
 df.to_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'), index=False)
 
 
-# In[32]:
+# In[70]:
 
 
 # lecture du csv genere pour verification
-df_clean = pd.read_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'))
+#df_clean = pd.read_csv(os.path.join(DATA_PROCESSED, 'enedis_2022.csv'))
 
 
-# In[33]:
+# In[71]:
 
 
-df_clean
+#df_clean
 
