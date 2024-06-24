@@ -7,8 +7,8 @@ import numpy as np
 import os
 
 # chemin du dossier de travail
-DATA_PATH = '../data/raw/'
-DATA_PROCESSED = '../data/processed'
+DATA_PATH = './data/raw/'
+DATA_PROCESSED = './data/processed'
 
 # FICHIER SOURCE A TELECHARGER ICI https://drive.google.com/file/d/1XtAdpekU4BzD_TKd5DcIbXBJY5xFYedH/view?usp=drive_link
 DATA_CSV = 'consommation-annuelle-residentielle-par-adresse.csv'
