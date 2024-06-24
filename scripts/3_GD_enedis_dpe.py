@@ -29,8 +29,7 @@ DATA_CSV = 'enedis_2022.csv'
 df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV))
 # creation de la liste des departement pour automatiser nos fonctions
 LIST_DEP = df['code_departement'].unique().astype(int)
-#LIST_DEP = [ 3, 54, 11, 63, 66, 21, 67, 56, 39, 25, 68, 40, 14, 58, 95, 10, 55, 82, 57, 22, 35, 51, 61, 17, 50, 49, 93, 28, 45, 27, 72, 87, 47, 92, 85, 73, 84, 43,  6, 88, 30,  8, 80,  5, 64, 42, 65, 16, 81, 70, 23, 32, 15, 89,  9, 34, 37, 12, 36, 86, 52, 24, 41, 18, 75, 79, 46, 48, 44, 60, 74, 53, 69, 90, 26, 76, 71, 78, 59, 38, 91,  1,  2, 29, 77, 33, 94, 19, 62, 83, 13, 31 ]
-
+#LIST_DEP = [ 48, 9]
 # # fonction: update enedis, get identifiant BAN (API data.gouv)
 # fonction pour filtrer le dataset en fonction du code departement
 def filter_df_by_code_departement(code_departement):
@@ -97,11 +96,16 @@ def get_building_dpe(building_id):
         data = response.json()
         if data['results']:
           for i in range(0,len(data["results"])):
+            # enregistre le result de la requete pour lenregistrement des colums de LIST_COL
+            #result = data["results"][i]
             if data["results"][i]["Etiquette_DPE"]:
-              #list_dpe.append(data["results"][i]["Etiquette_DPE"])
-              list_dpe += [data["results"][i]["Etiquette_DPE"]]
+                # append le result avec selection des champs de 
+                #list_dpe.extend([result.get(field) for field in LIST_COL])
+                # list_dpe.append(data["results"][i]["Etiquette_DPE"])
+                list_dpe += [data["results"][i]["Etiquette_DPE"]]
+                # print('test', nbr_dep, flush=True)
             else:
-              print(None)
+                print(None)
           return list_dpe
     else:
         # Si request error
@@ -110,7 +114,7 @@ def get_building_dpe(building_id):
 # convertir la mapping
 def convertir(list_antoine_dpe):
     # Dictionnaire pour convertir les lettres en chiffres
-    dpe_to_num = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7}
+    dpe_to_num = {'A': 35, 'B': 90, 'C': 145, 'D': 215, 'E': 290, 'F': 375, 'G': 460}
     # Dictionnaire pour convertir les chiffres en lettres
     num_to_dpe = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G'}
     # Convertir chaque DPE en chiffre
@@ -119,6 +123,8 @@ def convertir(list_antoine_dpe):
     moyenne = sum(num_list) / len(num_list)
     # Arrondir la moyenne à l'entier le plus proche
     moyenne_arrondie = round(moyenne)
+
+
     # Convertir le score moyen en lettre
     score_dpe = num_to_dpe[moyenne_arrondie]
     # classe DPE par intervale
@@ -135,11 +141,12 @@ def get_average_dpe(iban):
         dpe = get_building_dpe(ban)
         # Add the DPE label to the list
         if dpe:
-          dpe_labels.append(convertir(dpe))
+          #dpe_labels.append(convertir(dpe))
+          dpe_labels.append(dpe)
         else:
           dpe_labels.append(None)
     # Add the DPE labels to the DataFrame
-    df_ban["Etique_DPE_API"] = dpe_labels
+    df_ban["LIST_CLASS_DPE"] = dpe_labels
     return dpe_labels
 
 # # execution
@@ -154,8 +161,10 @@ for dep in LIST_DEP:
         print (f"-------------------{nbr_dep}/{len(LIST_DEP)}------------------------")
         print(f"###############################################")
         print(f"----------------Département {dep}-----------------")
+        
         filter_df_by_code_departement(dep)
         df_ban = pd.read_csv(os.path.join(DATA_PROCESSED, f'enedis_2022_{dep}.csv'))
+        # get average function v1
         get_average_dpe(df_ban['Identifiant__BAN'])
         # compte rendu
         print("-------------------DPE-------------------------")
@@ -174,7 +183,7 @@ print("Fin d'execution!")
 
 # # concat de tous les departements
 # créer un DataFrame vide avec les noms de colonnes
-dff = pd.DataFrame(columns=['nombre_de_logements', 'consommation_annuelle_totale_de_l_adresse_mwh', 'consommation_annuelle_moyenne_par_site_de_l_adresse_mwh', 'consommation_annuelle_moyenne_de_la_commune_mwh', 'Identifiant__BAN', 'Etique_DPE_API'])
+dff = pd.DataFrame(columns=['nombre_de_logements', 'consommation_annuelle_totale_de_l_adresse_mwh', 'consommation_annuelle_moyenne_par_site_de_l_adresse_mwh', 'consommation_annuelle_moyenne_de_la_commune_mwh', 'Identifiant__BAN'])
 # Exclure les colonnes vides ou entièrement NA (evite le warning de deprecated)
 dff = dff.dropna(axis=1, how='all')
 # Parcourir la liste des départements
