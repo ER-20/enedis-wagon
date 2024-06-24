@@ -12,14 +12,24 @@ from io import BytesIO
 DATA_PATH = '../data/raw/'
 DATA_PROCESSED = '../data/processed/'
 DATA_CSV = 'enedis_2022.csv'
+# definition des types
+d = {
+    'nom_commune': 'category',
+    'nombre_de_logements': 'int64',
+    'consommation_annuelle_totale_de_l_adresse_mwh': 'float64',
+    'consommation_annuelle_moyenne_par_site_de_l_adresse_mwh': 'float64',
+    'consommation_annuelle_moyenne_de_la_commune_mwh': 'float64',
+    'adresse': 'str',
+    'code_departement': 'str', 
+    'code_region': 'str' 
+ }
+
 # import du csv
-df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV))
+df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV), dtype=d)
 # variable pour choisir son departement
-DEPARTEMENT = 13
+DEPARTEMENT = int(sys.argv[1])
 df = df[df['code_departement'] == DEPARTEMENT]
-
-print(sys.argv[1])
-
+print(DEPARTEMENT)
 # fonction pour filtrer le dataset en fonction du code departement
 def filter_df_by_code_departement(code_departement):
     
@@ -64,7 +74,7 @@ def filter_df_by_code_departement(code_departement):
     # renommage des columns
     df_clean_ban_formated.rename(columns={'result_id': 'Identifiant__BAN'}, inplace=True)
     # garder les columns utile
-    df_clean_ban_formated = df_clean_ban_formated[['annee', 'nombre_de_logements', 'consommation_annuelle_totale_de_l_adresse_mwh', 'consommation_annuelle_moyenne_par_site_de_l_adresse_mwh', 'consommation_annuelle_moyenne_de_la_commune_mwh', 'Identifiant__BAN']]
+    df_clean_ban_formated = df_clean_ban_formated[['nombre_de_logements', 'consommation_annuelle_totale_de_l_adresse_mwh', 'consommation_annuelle_moyenne_par_site_de_l_adresse_mwh', 'consommation_annuelle_moyenne_de_la_commune_mwh', 'Identifiant__BAN']]
     df_clean_ban_formated.reset_index(drop=True, inplace=True)
     # export enedis 13 final
     df_clean_ban_formated.to_csv(os.path.join(DATA_PROCESSED, f'enedis_2022_{code_departement}.csv'), index=False)
@@ -72,41 +82,6 @@ def filter_df_by_code_departement(code_departement):
     return f'Fichier csv "enedis_2022_{code_departement}.csv" créé'
 
 
-# In[60]:
-
-
 # Filter la database d'enedis base sur le code_departement
 #%%time
 filter_df_by_code_departement(DEPARTEMENT)
-
-
-# In[61]:
-
-
-#enedis = pd.read_csv(os.path.join(DATA_PROCESSED, f'enedis_2022_{DEPARTEMENT}.csv'))
-#enedis
-
-
-# In[ ]:
-
-
-"""import argparse
-
-# Créer un objet ArgumentParser
-parser = argparse.ArgumentParser(description='Script pour filtrer le dataset enedis par code_departement.')
-
-# Ajouter un argument pour le code_departement
-parser.add_argument('DEPARTEMENT', type=int, help='Le code du département à filtrer.')
-
-# Parser les arguments
-args = parser.parse_args()
-
-# Utiliser l'argument dans votre fonction
-filter_df_by_code_departement(args.DEPARTEMENT)"""
-
-
-# In[ ]:
-
-
-
-
