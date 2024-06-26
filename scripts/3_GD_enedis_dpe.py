@@ -29,7 +29,7 @@ DATA_CSV = 'enedis_2022.csv'
 df = pd.read_csv(os.path.join(DATA_PROCESSED, DATA_CSV))
 # creation de la liste des departement pour automatiser nos fonctions
 LIST_DEP = df['code_departement'].unique().astype(int)
-#LIST_DEP = [ 48, 9]
+#LIST_DEP = [ 48 ]
 # # fonction: update enedis, get identifiant BAN (API data.gouv)
 # fonction pour filtrer le dataset en fonction du code departement
 def filter_df_by_code_departement(code_departement):
@@ -193,5 +193,5 @@ for dep in LIST_DEP:
     # Ajouter les données du département au DataFrame final
     dff = pd.concat([dff, df_dep], ignore_index=True)
 # Enregistrer le DataFrame final dans un fichier CSV
-dff.to_csv(os.path.join(DATA_PROCESSED, 'enedis_2022_final.csv'), index=False)
-print("enedis_2022_final.csv généré, Fin!")
+dff.to_csv(os.path.join(DATA_PROCESSED, 'enedis_2022_array.csv'), index=False)
+print("enedis_2022_array.csv généré, Fin!")
